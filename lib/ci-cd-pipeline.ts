@@ -11,7 +11,7 @@ export class CiCdAwsPipelineStack extends cdk.Stack {
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'OptionPortfolioStorePipeline',
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.gitHub('luisalfonsopreciado/options-porfolio-backend-infra', 'main'), //Remember to change 
+        input: CodePipelineSource.gitHub('luisalfonsopreciado/options-porfolio-backend-infra', 'master'), //Remember to change 
         commands: ['npm ci', 
                    'npm run build', 
                    'npx cdk synth']
