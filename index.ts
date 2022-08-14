@@ -43,10 +43,6 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
       entry: join(__dirname, 'lambdas', 'get-one.ts'),
       ...nodeJsFunctionProps,
     });
-    const getAllLambda = new NodejsFunction(this, 'getAllItemsFunction', {
-      entry: join(__dirname, 'lambdas', 'get-all.ts'),
-      ...nodeJsFunctionProps,
-    });
     const createOneLambda = new NodejsFunction(this, 'createItemFunction', {
       entry: join(__dirname, 'lambdas', 'create.ts'),
       ...nodeJsFunctionProps,
@@ -61,14 +57,12 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
     });
 
     // Grant the Lambda function read access to the DynamoDB table
-    dynamoTable.grantReadWriteData(getAllLambda);
     dynamoTable.grantReadWriteData(getOneLambda);
     dynamoTable.grantReadWriteData(createOneLambda);
     dynamoTable.grantReadWriteData(updateOneLambda);
     dynamoTable.grantReadWriteData(deleteOneLambda);
 
     // Integrate the Lambda functions with the API Gateway resource
-    const getAllIntegration = new LambdaIntegration(getAllLambda);
     const createOneIntegration = new LambdaIntegration(createOneLambda);
     const getOneIntegration = new LambdaIntegration(getOneLambda);
     const updateOneIntegration = new LambdaIntegration(updateOneLambda);
@@ -81,7 +75,6 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
     });
 
     const items = api.root.addResource('items');
-    items.addMethod('GET', getAllIntegration);
     items.addMethod('POST', createOneIntegration);
     addCorsOptions(items);
 
