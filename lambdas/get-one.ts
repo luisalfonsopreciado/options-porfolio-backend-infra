@@ -25,7 +25,9 @@ export const handler = async (event: any = {}): Promise<any> => {
     const response = await db.get(params).promise();
     if (response.Item) {
       delete response.Item["ttl"];
-      return { statusCode: 200, body: JSON.stringify(response.Item) };
+      return { statusCode: 200, body: JSON.stringify(response.Item), headers: {
+        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
+    } };
     } else {
       return { statusCode: 404 };
     }

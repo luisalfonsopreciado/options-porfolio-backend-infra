@@ -30,7 +30,9 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   try {
     await db.put(params).promise();
-    return { statusCode: 201, body: "" };
+    return { statusCode: 201, body: item[PRIMARY_KEY], headers: {
+        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
+    } };
   } catch (e: unknown) {
     const dbError = e as any;
     const errorResponse =

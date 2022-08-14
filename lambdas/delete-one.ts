@@ -9,7 +9,7 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   const requestedItemId = event.pathParameters.id;
   if (!requestedItemId) {
-    return { statusCode: 400, body: `Error: You are missing the path parameter id` };
+    return { statusCode: 400, body: `Error: You are missing the path parameter id`};
   }
 
   const params = {
@@ -21,7 +21,9 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   try {
     await db.delete(params).promise();
-    return { statusCode: 200, body: '' };
+    return { statusCode: 200, body: '', headers: {
+        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
+    }};
   } catch (dbError) {
     return { statusCode: 500, body: JSON.stringify(dbError) };
   }
