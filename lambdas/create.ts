@@ -1,7 +1,14 @@
 import * as AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
+import { createResourceNameWithStage } from "../lib/stage-util";
 
-const TABLE_NAME = process.env.TABLE_NAME || "";
+const TABLE_NAME =
+  (process.env.TABLE_NAME && process.env.STAGE_NAME)
+    ? createResourceNameWithStage(
+        process.env.TABLE_NAME,
+        process.env.STAGE_NAME
+      )
+    : "";
 const PRIMARY_KEY = process.env.PRIMARY_KEY || "";
 
 const db = new AWS.DynamoDB.DocumentClient();
@@ -30,9 +37,13 @@ export const handler = async (event: any = {}): Promise<any> => {
 
   try {
     await db.put(params).promise();
-    return { statusCode: 201, body: item[PRIMARY_KEY], headers: {
-        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
-    } };
+    return {
+      statusCode: 201,
+      body: item[PRIMARY_KEY],
+      headers: {
+        "Access-Control-Allow-Origin": "https://luisalfonsopreciado.github.io",
+      },
+    };
   } catch (e: unknown) {
     const dbError = e as any;
     const errorResponse =
