@@ -1,12 +1,21 @@
-import * as AWS from "aws-sdk";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { ddbClient } from "../lib/ddb-client";
+import { createResourceNameWithStage } from "../lib/stage-util";
 
-const TABLE_NAME = process.env.TABLE_NAME || "";
-const PRIMARY_KEY = process.env.PRIMARY_KEY || "";
+const TABLE_NAME =
+  (process.env.TABLE_NAME && process.env.STAGE_NAME)
+    ? createResourceNameWithStage(
+        process.env.TABLE_NAME,
+        process.env.STAGE_NAME
+      )
+    : "testEnvironmentTableName";
+
+const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
 
 const RESERVED_RESPONSE = `Error: You're using AWS reserved keywords as attributes`,
   DYNAMODB_EXECUTION_ERROR = `Error: Execution update, caused a Dynamodb error, please take a look at your CloudWatch Logs.`;
 
-const db = new AWS.DynamoDB.DocumentClient();
+  const ddb =  DynamoDBDocumentClient.from(ddbClient);
 
 export const handler = async (event: any = {}): Promise<any> => {
   if (!event.body) {
@@ -50,7 +59,7 @@ export const handler = async (event: any = {}): Promise<any> => {
   });
 
   try {
-    await db.update(params).promise();
+    await ddb.send(new UpdateCommand(params));
     return { statusCode: 204, body: "", headers: {
         "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
     }};

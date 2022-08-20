@@ -1,29 +1,50 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBDocumentClient, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { ddbClient } from "../lib/ddb-client";
+import { createResourceNameWithStage } from "../lib/stage-util";
 
-const TABLE_NAME = process.env.TABLE_NAME || '';
-const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
+const TABLE_NAME =
+  (process.env.TABLE_NAME && process.env.STAGE_NAME)
+    ? createResourceNameWithStage(
+        process.env.TABLE_NAME,
+        process.env.STAGE_NAME
+      )
+    : "testEnvironmentTableName";
 
-const db = new AWS.DynamoDB.DocumentClient();
+const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
+
+const ddb = DynamoDBDocumentClient.from(ddbClient);
+
+const pathParameterErrorResponse = {
+  statusCode: 400,
+  body: `Error: You are missing the path parameter id`,
+};
 
 export const handler = async (event: any = {}): Promise<any> => {
+  if (!event.pathParameters) {
+    return pathParameterErrorResponse;
+  }
 
   const requestedItemId = event.pathParameters.id;
   if (!requestedItemId) {
-    return { statusCode: 400, body: `Error: You are missing the path parameter id`};
+    return pathParameterErrorResponse;
   }
 
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      [PRIMARY_KEY]: requestedItemId
-    }
+      [PRIMARY_KEY]: requestedItemId,
+    },
   };
 
   try {
-    await db.delete(params).promise();
-    return { statusCode: 200, body: '', headers: {
-        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
-    }};
+    await ddb.send(new DeleteCommand(params));
+    return {
+      statusCode: 200,
+      body: "",
+      headers: {
+        "Access-Control-Allow-Origin": "https://luisalfonsopreciado.github.io",
+      },
+    };
   } catch (dbError) {
     return { statusCode: 500, body: JSON.stringify(dbError) };
   }

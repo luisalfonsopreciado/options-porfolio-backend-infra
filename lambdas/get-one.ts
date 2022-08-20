@@ -1,17 +1,37 @@
-import * as AWS from "aws-sdk";
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  GetCommandOutput,
+} from "@aws-sdk/lib-dynamodb";
+import { unmarshallOutput } from "@aws-sdk/lib-dynamodb/dist-types/commands/utils";
+import { ddbClient } from "../lib/ddb-client";
+import { createResourceNameWithStage } from "../lib/stage-util";
 
-const TABLE_NAME = process.env.TABLE_NAME || "";
-const PRIMARY_KEY = process.env.PRIMARY_KEY || "";
+const TABLE_NAME =
+  (process.env.TABLE_NAME && process.env.STAGE_NAME)
+    ? createResourceNameWithStage(
+        process.env.TABLE_NAME,
+        process.env.STAGE_NAME
+      )
+    : "testEnvironmentTableName";
 
-const db = new AWS.DynamoDB.DocumentClient();
+const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
+
+const ddb = DynamoDBDocumentClient.from(ddbClient);
+
+const pathParameterErrorResponse = {
+  statusCode: 400,
+  body: `Error: You are missing the path parameter id`,
+};
 
 export const handler = async (event: any = {}): Promise<any> => {
+  if (!event.pathParameters) {
+    return pathParameterErrorResponse;
+  }
+
   const requestedItemId = event.pathParameters.id;
   if (!requestedItemId) {
-    return {
-      statusCode: 400,
-      body: `Error: You are missing the path parameter id`,
-    };
+    return pathParameterErrorResponse;
   }
 
   const params = {
@@ -22,12 +42,19 @@ export const handler = async (event: any = {}): Promise<any> => {
   };
 
   try {
-    const response = await db.get(params).promise();
+    const response: GetCommandOutput = await ddb.send(new GetCommand(params));
     if (response.Item) {
       delete response.Item["ttl"];
-      return { statusCode: 200, body: JSON.stringify(response.Item), headers: {
-        "Access-Control-Allow-Origin" : "https://luisalfonsopreciado.github.io"
-    } };
+      const body = unmarshallOutput(response.Item, []);
+      
+      return {
+        statusCode: 200,
+        body,
+        headers: {
+          "Access-Control-Allow-Origin":
+            "https://luisalfonsopreciado.github.io",
+        },
+      };
     } else {
       return { statusCode: 404 };
     }
