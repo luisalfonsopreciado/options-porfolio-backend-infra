@@ -50,6 +50,7 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
           dynamoTable.tableName,
           stageName
         ),
+        STAGE_NAME: stageName, 
       },
       runtime: Runtime.NODEJS_14_X,
     };
