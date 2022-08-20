@@ -3,7 +3,6 @@ import {
   GetCommand,
   GetCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
-import { unmarshallOutput } from "@aws-sdk/lib-dynamodb/dist-types/commands/utils";
 import { ddbClient } from "../lib/ddb-client";
 import { createResourceNameWithStage } from "../lib/stage-util";
 
@@ -45,8 +44,8 @@ export const handler = async (event: any = {}): Promise<any> => {
     const response: GetCommandOutput = await ddb.send(new GetCommand(params));
     if (response.Item) {
       delete response.Item["ttl"];
-      const body = unmarshallOutput(response.Item, []);
-      
+      const body = response.Item;
+
       return {
         statusCode: 200,
         body,
