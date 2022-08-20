@@ -20,12 +20,14 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
   constructor(scope: Construct, id: string, stageName: string) {
     super(scope, id);
 
-    const dynamoTable = new Table(this, "items", {
+    const tableNameStage = createResourceNameWithStage("items", stageName);
+
+    const dynamoTable = new Table(this, tableNameStage, {
       partitionKey: {
         name: "itemId",
         type: AttributeType.STRING,
       },
-      tableName: "items",
+      tableName: tableNameStage,
       timeToLiveAttribute: "ttl",
       /**
        *  The default removal policy is RETAIN, which means that cdk destroy will not attempt to delete
