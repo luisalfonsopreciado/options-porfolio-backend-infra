@@ -1,19 +1,8 @@
 import { handler as createLambda } from "../lambdas/create";
-import * as AWS from "aws-sdk";
-import { AWSError, Request } from "aws-sdk";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 jest.mock("aws-sdk");
-
-AWS.DynamoDB.DocumentClient.prototype.put = jest.fn(
-  (
-    _: AWS.DynamoDB.DocumentClient.PutItemInput,
-    cb: any
-  ): Request<AWS.DynamoDB.DocumentClient.PutItemOutput, AWSError> => {
-    return cb(null, {});
-  }
-);
 
 const ddbMock = mockClient(DynamoDBDocumentClient);
 

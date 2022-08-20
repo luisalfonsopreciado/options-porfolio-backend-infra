@@ -1,4 +1,3 @@
-import * as AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { createResourceNameWithStage } from "../lib/stage-util";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
