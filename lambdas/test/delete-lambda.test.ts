@@ -1,4 +1,4 @@
-import { handler as deleteLambda } from "../lambdas/delete-one";
+import { handler as deleteLambda } from "../delete-one";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 

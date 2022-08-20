@@ -1,4 +1,4 @@
-import { handler as createLambda } from "../lambdas/create";
+import { handler as createLambda } from "../create";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 

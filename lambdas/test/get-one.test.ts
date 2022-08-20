@@ -1,4 +1,4 @@
-import { handler as getLambda } from "../lambdas/get-one";
+import { handler as getLambda } from "../get-one";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 
