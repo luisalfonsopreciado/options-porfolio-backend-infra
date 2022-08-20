@@ -1,16 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import { createResourceNameWithStage } from "../lib/stage-util";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbClient } from "../lib/ddb-client";
 
-const TABLE_NAME =
-  (process.env.TABLE_NAME && process.env.STAGE_NAME)
-    ? createResourceNameWithStage(
-        process.env.TABLE_NAME,
-        process.env.STAGE_NAME
-      )
-    : "testEnvironmentTableName";
-
+const TABLE_NAME = process.env.TABLE_NAME || "testEnvironmentTableName";
 const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
 
 const ddb =  DynamoDBDocumentClient.from(ddbClient);

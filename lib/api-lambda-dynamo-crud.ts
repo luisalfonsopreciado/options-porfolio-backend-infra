@@ -46,10 +46,7 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
       depsLockFilePath: join(__dirname, "../", "lambdas", "package-lock.json"),
       environment: {
         PRIMARY_KEY: "itemId",
-        TABLE_NAME: createResourceNameWithStage(
-          dynamoTable.tableName,
-          stageName
-        ),
+        TABLE_NAME: dynamoTable.tableName,
         STAGE_NAME: stageName, 
       },
       runtime: Runtime.NODEJS_14_X,

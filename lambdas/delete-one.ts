@@ -1,15 +1,7 @@
 import { DynamoDBDocumentClient, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbClient } from "../lib/ddb-client";
-import { createResourceNameWithStage } from "../lib/stage-util";
 
-const TABLE_NAME =
-  (process.env.TABLE_NAME && process.env.STAGE_NAME)
-    ? createResourceNameWithStage(
-        process.env.TABLE_NAME,
-        process.env.STAGE_NAME
-      )
-    : "testEnvironmentTableName";
-
+const TABLE_NAME = process.env.TABLE_NAME || "testEnvironmentTableName";
 const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
 
 const ddb = DynamoDBDocumentClient.from(ddbClient);
