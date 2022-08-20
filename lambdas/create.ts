@@ -1,6 +1,8 @@
 import * as AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { createResourceNameWithStage } from "../lib/stage-util";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { ddbClient } from "../lib/ddb-client";
 
 const TABLE_NAME =
   (process.env.TABLE_NAME && process.env.STAGE_NAME)
@@ -8,13 +10,11 @@ const TABLE_NAME =
         process.env.TABLE_NAME,
         process.env.STAGE_NAME
       )
-    : "";
-const PRIMARY_KEY = process.env.PRIMARY_KEY || "";
+    : "testEnvironmentTableName";
 
-const db = new AWS.DynamoDB.DocumentClient();
+const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
 
-const RESERVED_RESPONSE = `Error: You're using AWS reserved keywords as attributes`,
-  DYNAMODB_EXECUTION_ERROR = `Error: Execution update, caused a Dynamodb error, please take a look at your CloudWatch Logs.`;
+const ddb =  DynamoDBDocumentClient.from(ddbClient);
 
 export const handler = async (event: any = {}): Promise<any> => {
   if (!event.body) {
@@ -36,7 +36,7 @@ export const handler = async (event: any = {}): Promise<any> => {
   item.ttl = expirationTime;
 
   try {
-    await db.put(params).promise();
+    await ddb.send(new PutCommand(params));
     return {
       statusCode: 201,
       body: item[PRIMARY_KEY],
@@ -46,11 +46,6 @@ export const handler = async (event: any = {}): Promise<any> => {
     };
   } catch (e: unknown) {
     const dbError = e as any;
-    const errorResponse =
-      dbError.code === "ValidationException" &&
-      dbError.message.includes("reserved keyword")
-        ? DYNAMODB_EXECUTION_ERROR
-        : RESERVED_RESPONSE;
-    return { statusCode: 500, body: errorResponse };
+    return { statusCode: 500, body: dbError };
   }
 };
