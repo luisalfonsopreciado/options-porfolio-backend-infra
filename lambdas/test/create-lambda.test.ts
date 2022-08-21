@@ -16,7 +16,6 @@ describe("test create lambda", () => {
     const result = await createLambda({ body: { foo: "bar" } });
 
     expect(result.statusCode).toEqual(201);
-    expect(ddbMock);
   });
 
   test("testCreateLambdaException", async () => {

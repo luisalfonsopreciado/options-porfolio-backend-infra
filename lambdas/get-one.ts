@@ -36,7 +36,7 @@ export const handler = async (event: any = {}): Promise<any> => {
     const response: GetCommandOutput = await ddb.send(new GetCommand(params));
     if (response.Item) {
       delete response.Item["ttl"];
-      const body = response.Item;
+      const body = JSON.stringify(response.Item);
 
       return {
         statusCode: 200,
