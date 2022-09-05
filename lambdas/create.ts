@@ -1,11 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbClient } from "../lib/ddb-client";
+import * as util from "./util";
 
 const TABLE_NAME = process.env.TABLE_NAME || "testEnvironmentTableName";
 const PRIMARY_KEY = process.env.PRIMARY_KEY || "testEnvironmentPrimaryKey";
 
-const ddb =  DynamoDBDocumentClient.from(ddbClient);
+const ddb = DynamoDBDocumentClient.from(ddbClient);
 
 export const handler = async (event: any = {}): Promise<any> => {
   if (!event.body) {
@@ -22,9 +23,7 @@ export const handler = async (event: any = {}): Promise<any> => {
     Item: item,
   };
 
-  const secondsSinceEpoch = Math.round(Date.now() / 1000);
-  const expirationTime = secondsSinceEpoch + 900; // 15 minutes
-  item.ttl = expirationTime;
+  item.ttl = util.getExpirationTime(15); // 15 minutes
 
   try {
     await ddb.send(new PutCommand(params));

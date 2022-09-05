@@ -7,7 +7,7 @@ import {
 } from "aws-cdk-lib/aws-apigateway";
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
-import { App, Stack, RemovalPolicy } from "aws-cdk-lib";
+import { Stack, RemovalPolicy } from "aws-cdk-lib";
 import {
   NodejsFunction,
   NodejsFunctionProps,
@@ -47,7 +47,7 @@ export class ApiLambdaCrudDynamoDBStack extends Stack {
       environment: {
         PRIMARY_KEY: "itemId",
         TABLE_NAME: dynamoTable.tableName,
-        STAGE_NAME: stageName, 
+        STAGE_NAME: stageName,
       },
       runtime: Runtime.NODEJS_14_X,
     };

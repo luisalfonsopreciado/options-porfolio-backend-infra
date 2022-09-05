@@ -6,7 +6,6 @@ declare global {
   interface File {}
 }
 
-
 // Set the AWS Region.
 const REGION = "us-east-1"; //e.g. "us-east-1"
 const ddbConfig: DynamoDBClientConfig = { region: REGION };
