@@ -56,7 +56,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       statusCode: 204,
       body: "",
       headers: {
-        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+        "Access-Control-Allow-Origin": "*",
       },
     };
   } catch (e: unknown) {
@@ -70,7 +70,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       statusCode: 500,
       body: errorResponse,
       headers: {
-        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+        "Access-Control-Allow-Origin": "*",
       },
     };
   }

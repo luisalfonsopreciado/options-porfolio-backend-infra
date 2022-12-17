@@ -31,7 +31,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       statusCode: 201,
       body: item[PRIMARY_KEY],
       headers: {
-        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+        "Access-Control-Allow-Origin": "*",
       },
     };
   } catch (e: unknown) {
@@ -40,7 +40,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       statusCode: 500,
       body: dbError,
       headers: {
-        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+        "Access-Control-Allow-Origin": "*",
       },
     };
   }
