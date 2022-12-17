@@ -43,7 +43,7 @@ export const handler = async (event: any = {}): Promise<any> => {
         body,
         headers: {
           "Access-Control-Allow-Origin":
-            "https://luisalfonsopreciado.github.io",
+            "https://www.optionstrategybuilder.xyz",
         },
       };
     } else {

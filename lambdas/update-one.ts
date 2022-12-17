@@ -56,7 +56,7 @@ export const handler = async (event: any = {}): Promise<any> => {
       statusCode: 204,
       body: "",
       headers: {
-        "Access-Control-Allow-Origin": "https://luisalfonsopreciado.github.io",
+        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
       },
     };
   } catch (e: unknown) {
