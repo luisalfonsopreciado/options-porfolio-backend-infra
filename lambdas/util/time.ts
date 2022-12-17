@@ -11,6 +11,6 @@ export const getSecondsSinceEpoch = (): number => {
  * @param numMinutesInFuture
  * @returns - UNIX timestamp
  */
-export const getExpirationTime = (numMinutesInFuture: number) => {
+export const getExpirationTime = (numMinutesInFuture: number): number => {
   return getSecondsSinceEpoch() + numMinutesInFuture * 60;
 };
