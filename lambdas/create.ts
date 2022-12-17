@@ -36,6 +36,12 @@ export const handler = async (event: any = {}): Promise<any> => {
     };
   } catch (e: unknown) {
     const dbError = e as any;
-    return { statusCode: 500, body: dbError };
+    return {
+      statusCode: 500,
+      body: dbError,
+      headers: {
+        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+      },
+    };
   }
 };

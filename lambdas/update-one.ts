@@ -66,6 +66,12 @@ export const handler = async (event: any = {}): Promise<any> => {
       dbError.message.includes("reserved keyword")
         ? DYNAMODB_EXECUTION_ERROR
         : RESERVED_RESPONSE;
-    return { statusCode: 500, body: errorResponse };
+    return {
+      statusCode: 500,
+      body: errorResponse,
+      headers: {
+        "Access-Control-Allow-Origin": "https://www.optionstrategybuilder.xyz",
+      },
+    };
   }
 };
