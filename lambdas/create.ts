@@ -23,7 +23,7 @@ export const handler = async (event: any = {}): Promise<any> => {
     Item: item,
   };
 
-  item.ttl = util.getExpirationTime(15); // 15 minutes
+  item.ttl = util.getExpirationTime(262800); // 6 months
 
   try {
     await ddb.send(new PutCommand(params));
